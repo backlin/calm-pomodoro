@@ -107,7 +107,7 @@ function addWork(minutes) {
 
 function addBreak(minutes) {
     setMode("break");
-    var millis = minutes * 1000;
+    var millis = minutes * 60 * 1000;
 
     if (window.breakTimer === null) {
         window.breakTimer = new Date().getTime() + millis;
