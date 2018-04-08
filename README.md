@@ -6,7 +6,6 @@ For those who _don't want_:
 * Lots of options
 * Statistics
 * Notifications
-* Sounds
 * Newsletters
 * Having to register an account
 

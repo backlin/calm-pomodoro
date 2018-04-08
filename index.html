@@ -119,26 +119,29 @@ function addBreak(minutes) {
 }
 
 function formatOutput() {
-    var output = document.getElementById("output");
-
     if (!!breakTimer) {
         var minutes = getMinutesRemaining(breakTimer);
         if (minutes <= 0) {
             setMode("attention");
-            output.innerHTML = "Time to work";
+            setTitle("Time to work");
             return;
         }
-        output.innerHTML = "Break " + minutes + "m";
+        setTitle("Break " + minutes + "m");
         return;
     }
 
     var minutes = getMinutesRemaining(window.workTimer);
     if (minutes <= 0) {
         setMode("attention");
-        output.innerHTML = "Time for a break";
+        setTitle("Time for a break");
         return;
     }
-    output.innerHTML = "Work " + minutes + "m";
+    setTitle("Work " + minutes + "m");
+}
+
+function setTitle(title) {
+    document.getElementById("output").innerHTML = title;
+    document.title = "Calm Pomodoro: " + title;
 }
 
 function getMinutesRemaining(timer) {
@@ -205,7 +208,8 @@ formatOutput();
     </div>
 </section>
 <footer>
-    Christofer B&auml;cklin 2018 :: <a href="http://github.com/backlin/calm-pomodoro">Source</a>
+    Check out the <a href="http://github.com/backlin/calm-pomodoro" target="_blank">code on GitHub</a>
+    or <a href="http://www.linkedin.com/in/cbacklin" target="_blank">me on LinkedIn</a>.
 </footer>
 </body>
 </html>
