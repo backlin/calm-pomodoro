@@ -3,10 +3,18 @@ Simple and unobtrusive Pomodoro implementation.
 
 For those who _don't want_:
 
+* Having to install an app
+* Having to register an account
 * Lots of options
-* Statistics
 * Notifications
 * Newsletters
-* Having to register an account
+* Ads
 
-Clone, edit settings directly in source and open in a browser (only tested in Firefox so far).
+Clone, edit settings directly in source, and open in a browser (only tested in Firefox so far).
+
+## Upcoming features
+Pull requests welcome!
+
+* Pause button
+* Session log
+* Persist state in browser

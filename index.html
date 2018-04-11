@@ -41,7 +41,6 @@ footer {
     bottom: 0;
     position: fixed;
     width: 100%;
-    padding: .3em;
 }
 
 #output {
@@ -94,11 +93,14 @@ function setMode(mode){
 
 function addWork(minutes) {
     setMode("work");
+
     var millis = minutes * 60 * 1000;
 
     if (window.workTimer === null) {
         window.workTimer = new Date().getTime() + millis;
         window.breakTimer = null;
+        window.ticker = setInterval(formatOutput, 1000);
+
         return
     }
 
@@ -107,11 +109,14 @@ function addWork(minutes) {
 
 function addBreak(minutes) {
     setMode("break");
+
     var millis = minutes * 60 * 1000;
 
     if (window.breakTimer === null) {
         window.breakTimer = new Date().getTime() + millis;
         window.workTimer = null;
+        window.ticker = setInterval(formatOutput, 1000);
+
         return
     }
 
@@ -123,6 +128,8 @@ function formatOutput() {
         var minutes = getMinutesRemaining(breakTimer);
         if (minutes <= 0) {
             setMode("attention");
+            window.breakTimer = null;
+            window.ticker = null;
             setTitle("Time to work");
             return;
         }
@@ -133,6 +140,8 @@ function formatOutput() {
     var minutes = getMinutesRemaining(window.workTimer);
     if (minutes <= 0) {
         setMode("attention");
+        window.workTimer = null;
+        window.ticker = null;
         setTitle("Time for a break");
         return;
     }
@@ -141,7 +150,7 @@ function formatOutput() {
 
 function setTitle(title) {
     document.getElementById("output").innerHTML = title;
-    document.title = "Calm Pomodoro: " + title;
+    document.title = title;
 }
 
 function getMinutesRemaining(timer) {
@@ -153,9 +162,11 @@ function getMinutesRemaining(timer) {
 
 // Update the count down every second
 window.onload = function() {
+    window.ticker = setInterval(formatOutput, 1000);
     window.workTimer = new Date().getTime();
     window.breakTimer = null;
     addWork(25);
+    formatOutput();
 
     document.getElementById("addWorkBig").onclick = function() {
         addWork(25);
@@ -178,9 +189,6 @@ window.onload = function() {
         return false;
     }
 }
-
-var x = setInterval(formatOutput, 1000);
-formatOutput();
 </script>
 </head>
 
@@ -208,8 +216,10 @@ formatOutput();
     </div>
 </section>
 <footer>
+  <p>
     Check out the <a href="http://github.com/backlin/calm-pomodoro" target="_blank">code on GitHub</a>
     or <a href="http://www.linkedin.com/in/cbacklin" target="_blank">me on LinkedIn</a>.
+  </p>
 </footer>
 </body>
 </html>
