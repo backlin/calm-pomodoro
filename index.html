@@ -71,6 +71,8 @@ a:hover {
 </style>
 <script>
 function setMode(mode){
+    window.mode = mode;
+
     var bg = document.getElementById("background");
     switch(mode) {
     case "work":
@@ -92,39 +94,35 @@ function setMode(mode){
 }
 
 function addWork(minutes) {
-    setMode("work");
-
     var millis = minutes * 60 * 1000;
 
-    if (window.workTimer === null) {
-        window.workTimer = new Date().getTime() + millis;
-        window.breakTimer = null;
-        window.ticker = setInterval(formatOutput, 1000);
-
+    if(window.mode == "work") {
+        window.workTimer += millis;
         return
     }
 
-    window.workTimer += millis;
+    setMode("work");
+    window.workTimer = new Date().getTime() + millis;
+    window.breakTimer = null;
+    window.ticker = setInterval(formatOutput, 1000);
 }
 
 function addBreak(minutes) {
-    setMode("break");
-
     var millis = minutes * 60 * 1000;
 
-    if (window.breakTimer === null) {
-        window.breakTimer = new Date().getTime() + millis;
-        window.workTimer = null;
-        window.ticker = setInterval(formatOutput, 1000);
-
+    if(window.mode == "break") {
+        window.breakTimer += millis;
         return
     }
 
-    window.breakTimer += millis;
+    setMode("break");
+    window.breakTimer = new Date().getTime() + millis;
+    window.workTimer = null;
+    window.ticker = setInterval(formatOutput, 1000);
 }
 
 function formatOutput() {
-    if (!!breakTimer) {
+    if (window.mode == "break") {
         var minutes = getMinutesRemaining(breakTimer);
         if (minutes <= 0) {
             setMode("attention");
@@ -162,9 +160,7 @@ function getMinutesRemaining(timer) {
 
 // Update the count down every second
 window.onload = function() {
-    window.ticker = setInterval(formatOutput, 1000);
-    window.workTimer = new Date().getTime();
-    window.breakTimer = null;
+    window.mode = "init";
     addWork(25);
     formatOutput();
 

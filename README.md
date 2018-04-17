@@ -1,5 +1,5 @@
 # Calm Pomodoro
-Simple and unobtrusive Pomodoro implementation.
+Simple and unobtrusive [Pomodoro][] implementation.
 
 For those who _don't want_:
 
@@ -18,3 +18,5 @@ Pull requests welcome!
 * Pause button
 * Session log
 * Persist state in browser
+
+[Pomodoro]: https://en.wikipedia.org/wiki/Pomodoro_Technique
