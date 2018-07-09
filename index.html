@@ -135,15 +135,17 @@ function formatOutput() {
         return;
     }
 
-    var minutes = getMinutesRemaining(window.workTimer);
-    if (minutes <= 0) {
-        setMode("attention");
-        window.workTimer = null;
-        window.ticker = null;
-        setTitle("Time for a break");
-        return;
+    if (window.mode == "work") {
+        var minutes = getMinutesRemaining(window.workTimer);
+        if (minutes <= 0) {
+            setMode("attention");
+            window.workTimer = null;
+            window.ticker = null;
+            setTitle("Time for a break");
+            return;
+        }
+        setTitle("Work " + minutes + "m");
     }
-    setTitle("Work " + minutes + "m");
 }
 
 function setTitle(title) {
