@@ -78,7 +78,7 @@ a:hover, a:hover * {
 </style>
 <script>
 function setMode(mode){
-    window.mode = mode;
+    localStorage.setItem("mode", mode)
 
     const bg = document.getElementById("background");
     switch(mode) {
@@ -103,7 +103,7 @@ function setMode(mode){
 function addWork(minutes) {
     const millis = minutes * 60 * 1000;
 
-    if(window.mode === "work") {
+    if(localStorage.getItem("mode") === "work") {
         window.workTimer += millis;
         return;
     }
@@ -117,7 +117,7 @@ function addWork(minutes) {
 function addBreak(minutes) {
     const millis = minutes * 60 * 1000;
 
-    if(window.mode === "break") {
+    if(localStorage.getItem("mode") === "break") {
         window.breakTimer += millis;
         return;
     }
@@ -129,7 +129,7 @@ function addBreak(minutes) {
 }
 
 function formatOutput() {
-    if (window.mode === "break") {
+    if(localStorage.getItem("mode") === "break") {
         const minutes = getMinutesRemaining(breakTimer);
         if (minutes <= 0) {
             setMode("attention");
@@ -145,7 +145,7 @@ function formatOutput() {
         return;
     }
 
-    if (window.mode === "work") {
+    if(localStorage.getItem("mode") === "work") {
         const minutes = getMinutesRemaining(window.workTimer);
         if (minutes <= 0) {
             setMode("attention");
@@ -194,7 +194,7 @@ function populateLog() {
 
 // Update the count down every second
 window.onload = function() {
-    window.mode = "init";
+    localStorage.setItem("mode", "init");
     addWork(25);
     formatOutput();
 

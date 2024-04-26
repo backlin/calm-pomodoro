@@ -1,0 +1,31 @@
+
+
+Mode    string
+Planned bool
+
+Use a single counter
+Don't poll every x seconds, but poll every minute and always update:
+  --> Replace setInterval() with setTimeout(): https://www.w3schools.com/jsref/met_win_settimeout.asp
+  --> Get rid of window.ticker
+
+
+
+--- Outline
+
+Add time:
+  End current mode
+  Set new mode
+
+
+End current mode:
+  If time is very short:
+    Merge with previous entry.
+  Else:
+    Append to log
+
+  Reset state
+
+
+Set new mode:
+  Update timers
+  Update title
