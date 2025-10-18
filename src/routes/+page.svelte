@@ -1,24 +1,24 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
 
-  let mode = "init";
-  let workTimer = null;
-  let breakTimer = null;
-  let ticker = null;
-  let beepAfterWork = true;
-  let beepAfterBreak = false;
-  let output = "";
-  let log = [];
+  let mode: string = "init";
+  let workTimer: number | null = null;
+  let breakTimer: number | null = null;
+  let ticker: NodeJS.Timeout | null = null;
+  let beepAfterWork: boolean = true;
+  let beepAfterBreak: boolean = false;
+  let output: string = "";
+  let log: any[] = [];
 
-  function setMode(newMode) {
+  function setMode(newMode: string): void {
     mode = newMode;
   }
 
-  function addWork(minutes) {
+  function addWork(minutes: number): void {
     const millis = minutes * 60 * 1000;
 
     if (mode === "work") {
-      workTimer += millis;
+      workTimer = (workTimer || 0) + millis;
       return;
     }
 
@@ -28,11 +28,11 @@
     ticker = setInterval(formatOutput, 1000);
   }
 
-  function addBreak(minutes) {
+  function addBreak(minutes: number): void {
     const millis = minutes * 60 * 1000;
 
     if (mode === "break") {
-      breakTimer += millis;
+      breakTimer = (breakTimer || 0) + millis;
       return;
     }
 
@@ -43,7 +43,7 @@
   }
 
   function formatOutput() {
-    if (mode === "break") {
+    if (mode === "break" && breakTimer !== null) {
       const minutes = getMinutesRemaining(breakTimer);
       if (minutes <= 0) {
         setMode("attention");
@@ -59,7 +59,7 @@
       return;
     }
 
-    if (mode === "work") {
+    if (mode === "work" && workTimer !== null) {
       const minutes = getMinutesRemaining(workTimer);
       if (minutes <= 0) {
         setMode("attention");
@@ -75,14 +75,14 @@
     }
   }
 
-  function setTitle(title) {
+  function setTitle(title: string): void {
     output = title;
     if (typeof document !== "undefined") {
       document.title = title;
     }
   }
 
-  function getMinutesRemaining(timer) {
+  function getMinutesRemaining(timer: number): number {
     const remaining = timer - new Date().getTime();
     return Math.ceil(remaining / (60 * 1000));
   }
