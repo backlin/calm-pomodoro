@@ -1,0 +1,92 @@
+* {
+  text-align: center;
+  font-family: sans-serif;
+  color: rgba(0, 0, 0, 0.33);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: linear-gradient(#ffe4db, white);
+}
+
+body.break {
+  background: linear-gradient(#88acad, white);
+}
+
+body.attention {
+  background: linear-gradient(yellow, white);
+}
+
+.actions {
+  display: inline-block;
+  width: 15em;
+  text-align: center;
+}
+
+.actions:first-child .content {
+  border-right: solid 1px rgba(0, 0, 0, 0.167);
+}
+
+footer {
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+}
+
+#output {
+  font-size: 72pt;
+  color: black;
+}
+
+h1 {
+  font-size: 12pt;
+}
+
+h2 {
+  font-size: 32pt;
+  margin: 0.3em;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  font-size: 24pt;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+footer a {
+  text-decoration: underline;
+}
+
+a:hover,
+a:hover * {
+  color: black;
+}
+
+button {
+  background: none;
+  border: none;
+  font-family: sans-serif;
+  color: rgba(0, 0, 0, 0.33);
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:hover {
+  color: black;
+}
+
+.soundIcon {
+  font-size: 200%;
+}
