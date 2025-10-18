@@ -10,10 +10,6 @@
   let output: string = "";
   let log: any[] = [];
 
-  function setMode(newMode: string): void {
-    mode = newMode;
-  }
-
   function addWork(minutes: number): void {
     const millis = minutes * 60 * 1000;
 
@@ -22,10 +18,14 @@
       return;
     }
 
-    setMode("work");
+    mode = "work";
     workTimer = new Date().getTime() + millis;
     breakTimer = null;
-    ticker = setInterval(formatOutput, 1000);
+    ticker = setInterval(() => {
+      // Trigger reactivity by updating a dummy variable
+      workTimer = workTimer;
+      breakTimer = breakTimer;
+    }, 1000);
   }
 
   function addBreak(minutes: number): void {
@@ -36,50 +36,14 @@
       return;
     }
 
-    setMode("break");
+    mode = "break";
     breakTimer = new Date().getTime() + millis;
     workTimer = null;
-    ticker = setInterval(formatOutput, 1000);
-  }
-
-  function formatOutput() {
-    if (mode === "break" && breakTimer !== null) {
-      const minutes = getMinutesRemaining(breakTimer);
-      if (minutes <= 0) {
-        setMode("attention");
-        breakTimer = null;
-        ticker = null;
-        setTitle("Time to work");
-        if (beepAfterBreak) {
-          beep();
-        }
-        return;
-      }
-      setTitle("Break " + minutes + "m");
-      return;
-    }
-
-    if (mode === "work" && workTimer !== null) {
-      const minutes = getMinutesRemaining(workTimer);
-      if (minutes <= 0) {
-        setMode("attention");
-        workTimer = null;
-        ticker = null;
-        setTitle("Time for a break");
-        if (beepAfterWork) {
-          beep();
-        }
-        return;
-      }
-      setTitle("Work " + minutes + "m");
-    }
-  }
-
-  function setTitle(title: string): void {
-    output = title;
-    if (typeof document !== "undefined") {
-      document.title = title;
-    }
+    ticker = setInterval(() => {
+      // Trigger reactivity by updating a dummy variable
+      workTimer = workTimer;
+      breakTimer = breakTimer;
+    }, 1000);
   }
 
   function getMinutesRemaining(timer: number): number {
@@ -103,33 +67,63 @@
     console.log("populateLog() not implemented");
   }
 
-  function toggleBeepAfterWork() {
-    beepAfterWork = !beepAfterWork;
-    if (beepAfterWork) {
-      beep();
+  // Reactive statement to format output and handle timer logic
+  $: {
+    if (mode === "break" && breakTimer !== null) {
+      const minutes = getMinutesRemaining(breakTimer);
+      if (minutes <= 0) {
+        mode = "attention";
+        breakTimer = null;
+        if (ticker) {
+          clearInterval(ticker);
+          ticker = null;
+        }
+        output = "Time to work";
+        if (beepAfterBreak) {
+          beep();
+        }
+      } else {
+        output = "Break " + minutes + "m";
+      }
+    } else if (mode === "work" && workTimer !== null) {
+      const minutes = getMinutesRemaining(workTimer);
+      if (minutes <= 0) {
+        mode = "attention";
+        workTimer = null;
+        if (ticker) {
+          clearInterval(ticker);
+          ticker = null;
+        }
+        output = "Time for a break";
+        if (beepAfterWork) {
+          beep();
+        }
+      } else {
+        output = "Work " + minutes + "m";
+      }
     }
   }
 
-  function toggleBeepAfterBreak() {
-    beepAfterBreak = !beepAfterBreak;
-    if (beepAfterBreak) {
-      beep();
+  // Reactive statement to update document title
+  $: {
+    if (typeof document !== "undefined") {
+      document.title = output || "Calm Pomodoro";
+    }
+  }
+
+  // Reactive statement to update body class
+  $: {
+    if (typeof document !== "undefined") {
+      document.body.className = mode;
     }
   }
 
   onMount(() => {
     mode = "init";
     addWork(25);
-    formatOutput();
     log = [];
     populateLog();
   });
-
-  $: {
-    if (typeof document !== "undefined") {
-      document.body.className = mode;
-    }
-  }
 </script>
 
 <svelte:head>
@@ -153,7 +147,6 @@
           <button
             on:click={() => {
               addWork(25);
-              formatOutput();
             }}>+25 min</button
           >
         </li>
@@ -161,13 +154,20 @@
           <button
             on:click={() => {
               addWork(5);
-              formatOutput();
             }}>+5 min</button
           >
         </li>
       </ul>
     </div>
-    <button class="soundIcon" on:click={toggleBeepAfterWork}>
+    <button
+      class="soundIcon"
+      on:click={() => {
+        beepAfterWork = !beepAfterWork;
+        if (beepAfterWork) {
+          beep();
+        }
+      }}
+    >
       {beepAfterWork ? "🔊" : "🔇"}
     </button>
   </div>
@@ -179,7 +179,6 @@
           <button
             on:click={() => {
               addBreak(5);
-              formatOutput();
             }}>+5 min</button
           >
         </li>
@@ -187,13 +186,20 @@
           <button
             on:click={() => {
               addBreak(1);
-              formatOutput();
             }}>+1 min</button
           >
         </li>
       </ul>
     </div>
-    <button class="soundIcon" on:click={toggleBeepAfterBreak}>
+    <button
+      class="soundIcon"
+      on:click={() => {
+        beepAfterBreak = !beepAfterBreak;
+        if (beepAfterBreak) {
+          beep();
+        }
+      }}
+    >
       {beepAfterBreak ? "🔊" : "🔇"}
     </button>
   </div>
