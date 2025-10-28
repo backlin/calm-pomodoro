@@ -15,6 +15,7 @@
   let lastModeSwitch: number = Date.now();
   let logEntries: Array<{ mode: string; duration: number; timestamp: number }> =
     [];
+  let tickCount: number = 0;
 
   function addWork(minutes: number): void {
     const millis = minutes * 60 * 1000;
@@ -29,9 +30,7 @@
     workTimer = new Date().getTime() + millis;
     breakTimer = null;
     ticker = setInterval(() => {
-      // Trigger reactivity by updating a dummy variable
-      workTimer = workTimer;
-      breakTimer = breakTimer;
+      tickCount++;
     }, 1000);
   }
 
@@ -48,9 +47,7 @@
     breakTimer = new Date().getTime() + millis;
     workTimer = null;
     ticker = setInterval(() => {
-      // Trigger reactivity by updating a dummy variable
-      workTimer = workTimer;
-      breakTimer = breakTimer;
+      tickCount++;
     }, 1000);
   }
 
@@ -123,7 +120,7 @@
   }
 
   // Reactive statement to format output and handle timer logic
-  $: {
+  $: if (tickCount >= 0) {
     if (mode === "break" && breakTimer !== null) {
       const minutes = getMinutesRemaining(breakTimer);
       if (minutes <= 0) {
@@ -158,6 +155,12 @@
       } else {
         output = "Work " + minutes + "m";
       }
+    } else if (mode === "attention") {
+      // output is already set when transitioning to attention mode
+    } else if (mode === "init") {
+      output = "";
+    } else {
+      output = "";
     }
   }
 
