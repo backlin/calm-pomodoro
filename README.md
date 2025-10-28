@@ -21,3 +21,6 @@ Pull requests and bug reports most welcome!
 - Persist state in browser
 
 [Pomodoro]: https://en.wikipedia.org/wiki/Pomodoro_Technique
+
+## Graphics
+[Tomato SVG](https://www.svgrepo.com/svg/475232/tomato) CC0.

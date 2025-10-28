@@ -216,6 +216,7 @@
 
 <svelte:head>
   <title>Calm Pomodoro</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 </svelte:head>
 
 <header>
