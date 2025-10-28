@@ -17,6 +17,33 @@
     [];
   let tickCount: number = 0;
 
+  const LOG_KEY = "calm-pomodoro-log";
+
+  function saveLogEntries(): void {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(LOG_KEY, JSON.stringify(logEntries));
+    }
+  }
+
+  function loadLogEntries(): void {
+    if (typeof localStorage !== "undefined") {
+      const saved = localStorage.getItem(LOG_KEY);
+      if (saved) {
+        try {
+          logEntries = JSON.parse(saved);
+        } catch (error) {
+          console.error("Failed to load log entries:", error);
+          logEntries = [];
+        }
+      }
+    }
+  }
+
+  function clearLog(): void {
+    logEntries = [];
+    saveLogEntries();
+  }
+
   function addWork(minutes: number): void {
     const millis = minutes * 60 * 1000;
 
@@ -70,6 +97,7 @@
           timestamp: now,
         },
       ];
+      saveLogEntries();
     }
 
     lastModeSwitch = now;
@@ -179,6 +207,7 @@
   }
 
   onMount(() => {
+    loadLogEntries();
     mode = "init";
     lastModeSwitch = Date.now();
     addWork(25);
@@ -275,6 +304,9 @@
         </span>
       </div>
     {/each}
+    {#if logEntries.length > 0}
+      <button class="clearLog" on:click={clearLog}>Clear Log</button>
+    {/if}
   </div>
 </section>
 
