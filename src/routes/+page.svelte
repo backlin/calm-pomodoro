@@ -11,6 +11,11 @@
   let audioContext: AudioContext | null = null;
   let beepBuffer: AudioBuffer | null = null;
 
+  // Logging system
+  let lastModeSwitch: number = Date.now();
+  let logEntries: Array<{ mode: string; duration: number; timestamp: number }> =
+    [];
+
   function addWork(minutes: number): void {
     const millis = minutes * 60 * 1000;
 
@@ -19,6 +24,7 @@
       return;
     }
 
+    logModeSwitch();
     mode = "work";
     workTimer = new Date().getTime() + millis;
     breakTimer = null;
@@ -37,6 +43,7 @@
       return;
     }
 
+    logModeSwitch();
     mode = "break";
     breakTimer = new Date().getTime() + millis;
     workTimer = null;
@@ -50,6 +57,25 @@
   function getMinutesRemaining(timer: number): number {
     const remaining = timer - new Date().getTime();
     return Math.ceil(remaining / (60 * 1000));
+  }
+
+  function logModeSwitch(): void {
+    const now = Date.now();
+    const elapsed = now - lastModeSwitch;
+    const elapsedMinutes = elapsed / (60 * 1000);
+
+    if (elapsedMinutes > 1 && mode !== "init") {
+      logEntries = [
+        ...logEntries,
+        {
+          mode: mode,
+          duration: Math.round(elapsedMinutes),
+          timestamp: now,
+        },
+      ];
+    }
+
+    lastModeSwitch = now;
   }
 
   async function initAudioContext() {
@@ -101,6 +127,7 @@
     if (mode === "break" && breakTimer !== null) {
       const minutes = getMinutesRemaining(breakTimer);
       if (minutes <= 0) {
+        logModeSwitch();
         mode = "attention";
         breakTimer = null;
         if (ticker) {
@@ -117,6 +144,7 @@
     } else if (mode === "work" && workTimer !== null) {
       const minutes = getMinutesRemaining(workTimer);
       if (minutes <= 0) {
+        logModeSwitch();
         mode = "attention";
         workTimer = null;
         if (ticker) {
@@ -149,6 +177,7 @@
 
   onMount(() => {
     mode = "init";
+    lastModeSwitch = Date.now();
     addWork(25);
   });
 </script>
@@ -233,20 +262,16 @@
 </section>
 <section id="log">
   <div class="logContainer">
-    <div class="logEntry">
-      <span class="logWork" style="width: 25rem;">25 m work</span>
-      <span class="logGap" style="width: 3rem;">!</span>
-      <span class="logBreak" style="width: 5rem;">5 m break</span>
-    </div>
-    <div class="logEntry">
-      <span class="logWork" style="width: 35rem;">35 m work</span>
-      <span class="logBreak" style="width: 5rem;">5 m break</span>
-    </div>
-    <div class="logEntry">
-      <span class="logWork" style="width: 25rem;">25 m work</span>
-      <span class="logGap" style="width: 1rem;">!</span>
-      <span class="logBreak" style="width: 20rem;">20 m break</span>
-    </div>
+    {#each logEntries as entry (entry.timestamp)}
+      <div class="logEntry">
+        <span
+          class="log{entry.mode === 'work' ? 'Work' : 'Break'}"
+          style="width: {entry.duration}rem;"
+        >
+          {entry.duration} m {entry.mode}
+        </span>
+      </div>
+    {/each}
   </div>
 </section>
 
