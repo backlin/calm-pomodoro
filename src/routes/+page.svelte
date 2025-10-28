@@ -231,6 +231,24 @@
     </button>
   </div>
 </section>
+<section id="log">
+  <div class="logContainer">
+    <div class="logEntry">
+      <span class="logWork" style="width: 25rem;">25 m work</span>
+      <span class="logGap" style="width: 3rem;">!</span>
+      <span class="logBreak" style="width: 5rem;">5 m break</span>
+    </div>
+    <div class="logEntry">
+      <span class="logWork" style="width: 35rem;">35 m work</span>
+      <span class="logBreak" style="width: 5rem;">5 m break</span>
+    </div>
+    <div class="logEntry">
+      <span class="logWork" style="width: 25rem;">25 m work</span>
+      <span class="logGap" style="width: 1rem;">!</span>
+      <span class="logBreak" style="width: 20rem;">20 m break</span>
+    </div>
+  </div>
+</section>
 
 <footer>
   <p>
