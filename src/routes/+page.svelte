@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  let mode: "init" | "work" | "break" | "attention" = "init";
+  type Mode = "init" | "work" | "break" | "attention";
+
+  let mode: Mode = "init";
   let workTimer: number | null = null;
   let breakTimer: number | null = null;
   let ticker: NodeJS.Timeout | null = null;
@@ -12,9 +14,9 @@
   let beepBuffer: AudioBuffer | null = null;
 
   // Logging system
+  type LogEntry = { mode: Mode; duration: number; timestamp: number };
   let lastModeSwitch: number = Date.now();
-  let logEntries: Array<{ mode: string; duration: number; timestamp: number }> =
-    [];
+  let logEntries: Array<LogEntry> = [];
   let tickCount: number = 0;
 
   const LOG_KEY = "calm-pomodoro-log";

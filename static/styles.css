@@ -102,6 +102,7 @@ button:hover {
   text-align: left;
   margin: 3rem auto;
   & .logEntry {
+    display: inline-block;
     & span {
       display: inline-block;
       border: solid 1px #999;
