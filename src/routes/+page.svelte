@@ -41,6 +41,13 @@
     }
   }
 
+  function formatLogEntry(entry: LogEntry): string {
+    if (entry.mode === "attention") return "?";
+    if (entry.duration < 3) return entry.duration.toString();
+    if (entry.duration < 5) return `${entry.duration} m`;
+    return `${entry.duration} m ${entry.mode}`;
+  }
+
   function clearLog(): void {
     logEntries = [];
     saveLogEntries();
@@ -297,19 +304,31 @@
 </section>
 <section id="log">
   <div class="logContainer">
-    {#each logEntries as entry (entry.timestamp)}
-      <div class="logEntry">
-        <span
-          class="log{entry.mode === 'work' ? 'Work' : 'Break'}"
-          style="width: {entry.duration}rem;"
-        >
-          {entry.duration} m {entry.mode}
-        </span>
-      </div>
-    {/each}
     {#if logEntries.length > 0}
       <button class="clearLog" on:click={clearLog}>Clear Log</button>
     {/if}
+    {#each logEntries as entry, index (entry.timestamp)}
+      {#if index === 0 || entry.timestamp - (logEntries[index - 1].timestamp + logEntries[index - 1].duration * 60 * 1000) > 60 * 60 * 1000}
+        <h3 class="logDateHeading">
+          {new Date(entry.timestamp)
+            .toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "long",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+            .toLowerCase()}
+        </h3>
+      {/if}
+      <div
+        class="logEntry log-{entry.mode} {entry.duration < 3
+          ? 'short'
+          : 'long'}"
+        style="width: {entry.duration}rem;"
+      >
+        {formatLogEntry(entry)}
+      </div>
+    {/each}
   </div>
 </section>
 
