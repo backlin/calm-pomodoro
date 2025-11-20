@@ -231,116 +231,116 @@
 <header>
   <h1>Calm Pomodoro</h1>
 </header>
+<main>
+  <div id="main-container">
+    <section>
+      <p id="output">{output}</p>
+    </section>
 
-<section>
-  <p id="output">{output}</p>
-</section>
-
-<section>
-  <div class="actions">
-    <div class="content">
-      <h2>Work</h2>
-      <ul>
-        <li>
-          <button
-            on:click={() => {
-              addWork(25);
-            }}>+25 min</button
-          >
-        </li>
-        <li>
-          <button
-            on:click={() => {
-              addWork(5);
-            }}>+5 min</button
-          >
-        </li>
-      </ul>
-    </div>
-    <button
-      class="soundIcon"
-      on:click={() => {
-        beepAfterWork = !beepAfterWork;
-        if (beepAfterWork) {
-          beep();
-        }
-      }}
-    >
-      {beepAfterWork ? "🔊" : "🔇"}
-    </button>
-  </div>
-  <div class="actions">
-    <div class="content">
-      <h2>Break</h2>
-      <ul>
-        <li>
-          <button
-            on:click={() => {
-              addBreak(5);
-            }}>+5 min</button
-          >
-        </li>
-        <li>
-          <button
-            on:click={() => {
-              addBreak(1);
-            }}>+1 min</button
-          >
-        </li>
-      </ul>
-    </div>
-    <button
-      class="soundIcon"
-      on:click={() => {
-        beepAfterBreak = !beepAfterBreak;
-        if (beepAfterBreak) {
-          beep();
-        }
-      }}
-    >
-      {beepAfterBreak ? "🔊" : "🔇"}
-    </button>
-  </div>
-</section>
-<section id="log">
-  <div class="logContainer">
-    {#if logEntries.length > 0}
-      <button class="clearLog" on:click={clearLog}>Clear Log</button>
-    {/if}
-    {#each logEntries as entry, index (entry.timestamp)}
-      {#if index === 0 || entry.timestamp - (logEntries[index - 1].timestamp + logEntries[index - 1].duration * 60 * 1000) > 60 * 60 * 1000}
-        <h3 class="logDateHeading">
-          {new Date(entry.timestamp)
-            .toLocaleDateString("en-GB", {
-              day: "numeric",
-              month: "long",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-            .toLowerCase()}
-        </h3>
-      {/if}
-      <div
-        class="logEntry log-{entry.mode} {entry.duration < 3
-          ? 'short'
-          : 'long'}"
-        style="width: {entry.duration}rem;"
-      >
-        {formatLogEntry(entry)}
+    <section>
+      <div class="actions">
+        <div class="content">
+          <h2>Work</h2>
+          <ul>
+            <li>
+              <button
+                on:click={() => {
+                  addWork(25);
+                }}>+25 min</button
+              >
+            </li>
+            <li>
+              <button
+                on:click={() => {
+                  addWork(5);
+                }}>+5 min</button
+              >
+            </li>
+          </ul>
+        </div>
+        <button
+          class="soundIcon"
+          on:click={() => {
+            beepAfterWork = !beepAfterWork;
+            if (beepAfterWork) {
+              beep();
+            }
+          }}
+        >
+          {beepAfterWork ? "🔊" : "🔇"}
+        </button>
       </div>
-    {/each}
+      <div class="actions">
+        <div class="content">
+          <h2>Break</h2>
+          <ul>
+            <li>
+              <button
+                on:click={() => {
+                  addBreak(5);
+                }}>+5 min</button
+              >
+            </li>
+            <li>
+              <button
+                on:click={() => {
+                  addBreak(1);
+                }}>+1 min</button
+              >
+            </li>
+          </ul>
+        </div>
+        <button
+          class="soundIcon"
+          on:click={() => {
+            beepAfterBreak = !beepAfterBreak;
+            if (beepAfterBreak) {
+              beep();
+            }
+          }}
+        >
+          {beepAfterBreak ? "🔊" : "🔇"}
+        </button>
+      </div>
+    </section>
+    <section id="log">
+      <div class="logContainer">
+        {#if logEntries.length > 0}
+          <button class="clearLog" on:click={clearLog}>Clear Log</button>
+        {/if}
+        {#each logEntries as entry, index (entry.timestamp)}
+          {#if index === 0 || entry.timestamp - (logEntries[index - 1].timestamp + logEntries[index - 1].duration * 60 * 1000) > 60 * 60 * 1000}
+            <h3 class="logDateHeading">
+              {new Date(entry.timestamp)
+                .toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+                .toLowerCase()}
+            </h3>
+          {/if}
+          <div
+            class="logEntry log-{entry.mode} {entry.duration < 3
+              ? 'short'
+              : 'long'}"
+            style="width: {entry.duration}rem;"
+          >
+            {formatLogEntry(entry)}
+          </div>
+        {/each}
+      </div>
+    </section>
   </div>
-</section>
+</main>
 
 <footer>
-  <p>
-    Check out the <a
-      href="http://github.com/backlin/calm-pomodoro"
-      target="_blank">code on GitHub</a
-    >
-    or
-    <a href="http://www.linkedin.com/in/cbacklin" target="_blank"
-      >me on LinkedIn</a
-    >.
-  </p>
+  <div id="footer-container">
+    <p>
+      &copy; 2025
+      <a href="https://nofuss.io/about/">No Fuss Data AB</a>
+      <a href="https://nofuss.io/apps/pomodoro/">About the app</a>
+    </p>
+  </div>
 </footer>
